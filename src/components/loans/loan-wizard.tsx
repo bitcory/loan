@@ -113,9 +113,9 @@ export function LoanWizard() {
   return (
     <div className="space-y-6">
       {/* Step indicator */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between overflow-x-auto pb-2">
         {STEPS.map((label, i) => (
-          <div key={i} className="flex items-center">
+          <div key={i} className="flex items-center shrink-0">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
                 i <= step
@@ -125,11 +125,11 @@ export function LoanWizard() {
             >
               {i + 1}
             </div>
-            <span className={`ml-2 text-sm ${i <= step ? "font-medium" : "text-muted-foreground"}`}>
+            <span className={`ml-2 text-sm hidden sm:inline ${i <= step ? "font-medium" : "text-muted-foreground"}`}>
               {label}
             </span>
             {i < STEPS.length - 1 && (
-              <div className={`mx-4 h-px w-8 ${i < step ? "bg-primary" : "bg-muted"}`} />
+              <div className={`mx-2 sm:mx-4 h-px w-4 sm:w-8 ${i < step ? "bg-primary" : "bg-muted"}`} />
             )}
           </div>
         ))}
@@ -258,7 +258,7 @@ export function LoanWizard() {
       {step === 3 && (
         <Card>
           <CardHeader><CardTitle>상환 스케줄 (미리보기)</CardTitle></CardHeader>
-          <CardContent>
+          <CardContent className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     <>
       <PageHeader title="대시보드" description="대출 현황 요약" />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {cards.map((card) => (
           <Card key={card.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
               <card.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{card.value}</div>
+              <div className="text-lg font-bold sm:text-2xl truncate">{card.value}</div>
               <p className="text-xs text-muted-foreground">
                 {card.description}
               </p>

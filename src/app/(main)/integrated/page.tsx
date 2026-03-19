@@ -110,26 +110,28 @@ export default async function IntegratedPage({
         <CardContent className="p-0">
           {/* 검색바 */}
           <div className="border-b px-4 py-3">
-            <form className="flex gap-2">
+            <form className="flex flex-col gap-2 sm:flex-row">
               <Input
                 name="search"
                 placeholder="이름, 전화번호, 대출번호, 주소로 검색..."
                 defaultValue={params.search}
-                className="max-w-sm"
+                className="sm:max-w-sm"
               />
-              <select
-                name="status"
-                defaultValue={params.status || ""}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-              >
-                <option value="">전체 상태</option>
-                <option value="ACTIVE">활성</option>
-                <option value="COMPLETED">완료</option>
-                <option value="OVERDUE">연체</option>
-              </select>
-              <Button type="submit" variant="secondary">
-                검색
-              </Button>
+              <div className="flex gap-2">
+                <select
+                  name="status"
+                  defaultValue={params.status || ""}
+                  className="h-10 flex-1 rounded-md border border-input bg-background px-3 text-sm sm:flex-none"
+                >
+                  <option value="">전체 상태</option>
+                  <option value="ACTIVE">활성</option>
+                  <option value="COMPLETED">완료</option>
+                  <option value="OVERDUE">연체</option>
+                </select>
+                <Button type="submit" variant="secondary">
+                  검색
+                </Button>
+              </div>
             </form>
           </div>
 
@@ -247,11 +249,11 @@ export default async function IntegratedPage({
 
           {/* 페이지네이션 */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t px-4 py-3">
+            <div className="flex flex-col gap-2 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
                 {total}건 중 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)}건
               </p>
-              <div className="flex gap-1">
+              <div className="flex gap-1 overflow-x-auto">
                 {page > 1 && (
                   <Link
                     href={`/integrated?page=${page - 1}${params.search ? `&search=${params.search}` : ""}${params.status ? `&status=${params.status}` : ""}`}

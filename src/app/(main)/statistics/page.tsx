@@ -66,13 +66,13 @@ export default async function StatisticsPage() {
     <>
       <PageHeader title="통계" description="대출 현황 통계 리포트" />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">총 고객수</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCustomers}명</div>
+            <div className="text-lg font-bold sm:text-2xl">{stats.totalCustomers}명</div>
           </CardContent>
         </Card>
         <Card>
@@ -80,7 +80,7 @@ export default async function StatisticsPage() {
             <CardTitle className="text-sm font-medium">총 담보물건</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCollaterals}건</div>
+            <div className="text-lg font-bold sm:text-2xl">{stats.totalCollaterals}건</div>
           </CardContent>
         </Card>
         <Card>
@@ -88,7 +88,7 @@ export default async function StatisticsPage() {
             <CardTitle className="text-sm font-medium">총 실행금액</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg font-bold sm:text-2xl truncate">
               {formatCurrency(stats.totalDisbursed)}
             </div>
           </CardContent>
@@ -98,7 +98,7 @@ export default async function StatisticsPage() {
             <CardTitle className="text-sm font-medium">총 회수금액</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg font-bold sm:text-2xl truncate">
               {formatCurrency(stats.totalCollected)}
             </div>
           </CardContent>

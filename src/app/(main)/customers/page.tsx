@@ -40,23 +40,25 @@ export default async function CustomersPage({
       <Card>
         <CardContent className="p-0">
           <div className="border-b px-4 py-3">
-            <form className="flex gap-2">
+            <form className="flex flex-col gap-2 sm:flex-row">
               <Input
                 name="search"
                 placeholder="이름, 전화번호로 검색..."
                 defaultValue={params.search}
-                className="max-w-sm"
+                className="sm:max-w-sm"
               />
-              <select
-                name="type"
-                defaultValue={params.type || ""}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-              >
-                <option value="">전체 유형</option>
-                <option value="INDIVIDUAL">개인</option>
-                <option value="CORPORATE">법인</option>
-              </select>
-              <Button type="submit" variant="secondary">검색</Button>
+              <div className="flex gap-2">
+                <select
+                  name="type"
+                  defaultValue={params.type || ""}
+                  className="h-10 flex-1 rounded-md border border-input bg-background px-3 text-sm sm:flex-none"
+                >
+                  <option value="">전체 유형</option>
+                  <option value="INDIVIDUAL">개인</option>
+                  <option value="CORPORATE">법인</option>
+                </select>
+                <Button type="submit" variant="secondary">검색</Button>
+              </div>
             </form>
           </div>
 
@@ -106,11 +108,11 @@ export default async function CustomersPage({
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t px-4 py-3">
+            <div className="flex flex-col gap-2 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
                 {total}건 중 {(page - 1) * 20 + 1}–{Math.min(page * 20, total)}건
               </p>
-              <div className="flex gap-1">
+              <div className="flex gap-1 overflow-x-auto">
                 {page > 1 && (
                   <Link href={`/customers?page=${page - 1}${params.search ? `&search=${params.search}` : ""}${params.type ? `&type=${params.type}` : ""}`}>
                     <Button variant="outline" size="sm">이전</Button>

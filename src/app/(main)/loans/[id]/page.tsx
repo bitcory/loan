@@ -112,7 +112,7 @@ export default async function LoanDetailPage({
 
         <TabsContent value="schedule">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -154,6 +154,7 @@ export default async function LoanDetailPage({
               {loan.payments.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">납부 이력이 없습니다</p>
               ) : (
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -178,6 +179,7 @@ export default async function LoanDetailPage({
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               )}
             </CardContent>
           </Card>

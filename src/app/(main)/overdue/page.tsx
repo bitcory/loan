@@ -55,10 +55,10 @@ export default async function OverduePage({
       <Card>
         <CardContent className="p-0">
           <div className="border-b px-4 py-3">
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto">
               {stages.map((s) => (
                 <Link key={s.value} href={`/overdue?stage=${s.value}`}>
-                  <Button variant={stage === s.value ? "default" : "outline"} size="sm">
+                  <Button variant={stage === s.value ? "default" : "outline"} size="sm" className="whitespace-nowrap">
                     {s.label}
                   </Button>
                 </Link>

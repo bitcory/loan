@@ -57,3 +57,16 @@
 .scrollbar-always-visible::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.55);
 }
+
+/* 모바일 터치 최적화 */
+@media (max-width: 767px) {
+  /* 입력 필드 포커스 시 확대 방지 */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* 테이블 셀 최소 너비 */
+  table th, table td {
+    min-width: 80px;
+  }
+}

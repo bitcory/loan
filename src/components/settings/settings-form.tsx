@@ -23,9 +23,17 @@ export function SettingsForm({ settings }: { settings: SettingItem[] }) {
     setMessage("");
 
     const formData = new FormData(e.currentTarget);
-    const result = await updateSettings(formData);
+    const settingsRecord: Record<string, string> = {};
+    Array.from(formData.entries()).forEach(([key, value]) => {
+      if (key.startsWith("setting_")) {
+        const settingKey = key.replace("setting_", "");
+        settingsRecord[settingKey] = String(value);
+      }
+    });
 
-    if (result.success) {
+    const result = await updateSettings(settingsRecord);
+
+    if (result?.data?.success) {
       setMessage("설정이 저장되었습니다.");
     }
     setSaving(false);

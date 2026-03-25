@@ -57,16 +57,12 @@ export function CollateralForm({ customers, defaultCustomerId, collateral }: Col
 
   async function onSubmit(data: CollateralFormData) {
     setSaving(true);
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) formData.append(key, String(value));
-    });
 
     const result = isEdit
-      ? await updateCollateral(collateral!.id, formData)
-      : await createCollateral(formData);
+      ? await updateCollateral({ id: collateral!.id, data })
+      : await createCollateral(data);
 
-    if ("error" in result) {
+    if (!result?.data?.success) {
       setSaving(false);
       return;
     }

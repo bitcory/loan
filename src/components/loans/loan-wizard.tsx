@@ -83,20 +83,20 @@ export function LoanWizard() {
 
   async function handleSubmit() {
     setSaving(true);
-    const formData = new FormData();
-    formData.append("customerId", customerId);
-    if (collateralId) formData.append("collateralId", collateralId);
-    formData.append("loanAmount", String(loanAmount));
-    formData.append("interestRate", String(interestRate));
-    formData.append("repaymentType", repaymentType);
-    formData.append("loanTermMonths", String(loanTermMonths));
-    formData.append("startDate", startDate);
 
-    const result = await createLoan(formData);
+    const result = await createLoan({
+      customerId,
+      collateralId: collateralId || undefined,
+      loanAmount,
+      interestRate,
+      repaymentType: repaymentType as "BULLET" | "EQUAL_PRINCIPAL" | "EQUAL_PAYMENT",
+      loanTermMonths,
+      startDate,
+    });
     setSaving(false);
 
-    if ("success" in result) {
-      router.push(`/loans/${result.id}`);
+    if (result?.data?.id) {
+      router.push(`/loans/${result.data.id}`);
     }
   }
 

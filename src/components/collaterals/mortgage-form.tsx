@@ -29,19 +29,18 @@ export function MortgageForm({
     e.preventDefault();
     setSaving(true);
 
-    const formData = new FormData();
-    formData.append("collateralId", collateralId);
-    formData.append("rank", String(rank));
-    formData.append("mortgageType", mortgageType);
-    formData.append("creditor", creditor);
-    formData.append("maxClaimAmount", String(maxClaimAmount));
-    formData.append("loanAmount", String(loanAmount));
-    formData.append("memo", memo);
-
-    const result = await createMortgage(formData);
+    const result = await createMortgage({
+      collateralId,
+      rank,
+      mortgageType: mortgageType as "SENIOR" | "JUNIOR",
+      creditor,
+      maxClaimAmount,
+      loanAmount: loanAmount || undefined,
+      memo: memo || undefined,
+    });
     setSaving(false);
 
-    if ("success" in result) {
+    if (result?.data?.success) {
       router.refresh();
       onSuccess?.();
     }

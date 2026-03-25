@@ -66,15 +66,10 @@ export function EditCustomerDialog({ customer }: EditCustomerDialogProps) {
 
   async function onSubmit(data: CustomerFormData) {
     setSaving(true);
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) formData.append(key, String(value));
-    });
-
-    const result = await updateCustomer(customer.id, formData);
+    const result = await updateCustomer({ id: customer.id, data });
     setSaving(false);
 
-    if ("error" in result) return;
+    if (!result?.data?.success) return;
 
     setOpen(false);
     router.refresh();

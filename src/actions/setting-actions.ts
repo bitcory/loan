@@ -1,52 +1,97 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getTenantClient } from "@/lib/prisma";
+import { adminAction } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-// TODO(01-03): Replace with session-derived organizationId
-const DEFAULT_ORG_ID = "default-org-001";
+// ---- READ functions (called from Server Components) ----
 
 export async function getSettings() {
-  return prisma.setting.findMany({
-    where: { organizationId: DEFAULT_ORG_ID },
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("인증이 필요합니다.");
+  const db = getTenantClient(session.user.organizationId);
+
+  return db.setting.findMany({
     orderBy: { key: "asc" },
   });
 }
 
 export async function getSetting(key: string) {
-  const setting = await prisma.setting.findFirst({
-    where: { key, organizationId: DEFAULT_ORG_ID },
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("인증이 필요합니다.");
+  const db = getTenantClient(session.user.organizationId);
+
+  const setting = await db.setting.findFirst({
+    where: { key },
   });
   return setting?.value;
 }
 
-export async function updateSettings(data: FormData) {
-  const entries = Array.from(data.entries());
+// ---- MUTATIONS (safe-action wrapped, ADMIN only) ----
 
-  for (const [key, value] of entries) {
-    if (key.startsWith("setting_")) {
-      const settingKey = key.replace("setting_", "");
-      const existing = await prisma.setting.findFirst({
-        where: { key: settingKey, organizationId: DEFAULT_ORG_ID },
+export const updateSettings = adminAction
+  .schema(z.record(z.string(), z.string()))
+  .action(async ({ parsedInput, ctx }) => {
+    for (const [settingKey, value] of Object.entries(parsedInput)) {
+      const existing = await ctx.db.setting.findFirst({
+        where: { key: settingKey },
       });
       if (existing) {
-        await prisma.setting.update({
-          where: { id: existing.id },
-          data: { value: value.toString() },
+        await ctx.db.setting.update({
+          where: {
+            organizationId_key: {
+              organizationId: ctx.organizationId,
+              key: settingKey,
+            },
+          },
+          data: { value },
         });
       } else {
-        await prisma.setting.create({
+        await ctx.db.setting.create({
           data: {
-            organizationId: DEFAULT_ORG_ID,
+            organizationId: ctx.organizationId,
             key: settingKey,
-            value: value.toString(),
+            value,
             label: settingKey,
           },
         });
       }
     }
-  }
 
-  revalidatePath("/settings");
-  return { success: true };
-}
+    revalidatePath("/settings");
+    return { success: true };
+  });
+
+export const updateSetting = adminAction
+  .schema(z.object({ key: z.string(), value: z.string() }))
+  .action(async ({ parsedInput, ctx }) => {
+    const existing = await ctx.db.setting.findFirst({
+      where: { key: parsedInput.key },
+    });
+    if (existing) {
+      await ctx.db.setting.update({
+        where: {
+          organizationId_key: {
+            organizationId: ctx.organizationId,
+            key: parsedInput.key,
+          },
+        },
+        data: { value: parsedInput.value },
+      });
+    } else {
+      await ctx.db.setting.create({
+        data: {
+          organizationId: ctx.organizationId,
+          key: parsedInput.key,
+          value: parsedInput.value,
+          label: parsedInput.key,
+        },
+      });
+    }
+
+    revalidatePath("/settings");
+    return { success: true };
+  });

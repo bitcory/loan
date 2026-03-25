@@ -59,16 +59,12 @@ export function CustomerForm({ customer }: CustomerFormProps) {
 
   async function onSubmit(data: CustomerFormData) {
     setSaving(true);
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) formData.append(key, String(value));
-    });
 
     const result = isEdit
-      ? await updateCustomer(customer!.id, formData)
-      : await createCustomer(formData);
+      ? await updateCustomer({ id: customer!.id, data })
+      : await createCustomer(data);
 
-    if ("error" in result) {
+    if (!result?.data?.success) {
       setSaving(false);
       return;
     }

@@ -97,19 +97,18 @@ export function PaymentDialog({
     e.preventDefault();
     setSaving(true);
 
-    const formData = new FormData();
-    formData.append("loanId", loanId);
-    if (selectedScheduleId) formData.append("scheduleId", selectedScheduleId);
-    formData.append("paymentDate", paymentDate);
-    formData.append("principalAmount", String(principalAmount));
-    formData.append("interestAmount", String(interestAmount));
-    formData.append("overdueAmount", String(overdueAmount));
-    formData.append("memo", memo);
-
-    const result = await processPayment(formData);
+    const result = await processPayment({
+      loanId,
+      scheduleId: selectedScheduleId || undefined,
+      paymentDate,
+      principalAmount,
+      interestAmount,
+      overdueAmount: overdueAmount || undefined,
+      memo: memo || undefined,
+    });
     setSaving(false);
 
-    if ("success" in result) {
+    if (result?.data?.success) {
       setOpen(false);
       // 초기화
       setSelectedScheduleId("");

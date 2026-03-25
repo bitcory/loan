@@ -1,14 +1,17 @@
 import { format } from "date-fns";
-import { prisma } from "./prisma";
+import { getTenantClient } from "@/lib/prisma";
+
+type TenantDb = ReturnType<typeof getTenantClient>;
 
 /**
  * 대출번호 자동생성: YYYYMMDD-NNNN
+ * TenantDb 를 주입받아 테넌트 격리 쿼리 실행
  */
-export async function generateLoanNumber(date?: Date): Promise<string> {
+export async function generateLoanNumber(db: TenantDb, date?: Date): Promise<string> {
   const d = date || new Date();
   const prefix = format(d, "yyyyMMdd");
 
-  const lastLoan = await prisma.loan.findFirst({
+  const lastLoan = await db.loan.findFirst({
     where: {
       loanNumber: { startsWith: prefix },
     },

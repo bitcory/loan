@@ -22,9 +22,9 @@ export function DeleteCollateralButton({ id, address }: { id: string; address: s
   const [error, setError] = useState("");
 
   async function handleDelete() {
-    const result = await deleteCollateral(id);
-    if ("error" in result) {
-      setError(result.error as string);
+    const result = await deleteCollateral({ id });
+    if (!result?.data?.success) {
+      setError(result?.serverError || "삭제에 실패했습니다.");
       return;
     }
     router.push("/collaterals");

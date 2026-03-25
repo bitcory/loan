@@ -184,10 +184,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | UI-02 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 54 total
-- Mapped to phases: 54
+- v1 requirements: 56 total
+- Mapped to phases: 56
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*

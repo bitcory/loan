@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **UI hint**: yes
 
 Plans:
-- [ ] 01-01-PLAN.md — Prisma 스키마: Organization/User 모델 + nullable organizationId FK (Migration 1) + 세션 타입
+- [x] 01-01-PLAN.md — Prisma 스키마: Organization/User 모델 + nullable organizationId FK (Migration 1) + 세션 타입
 - [ ] 01-02-PLAN.md — 기본 조직 seed + backfill + NOT NULL 강제 (Migration 2 완료)
 - [ ] 01-03-PLAN.md — Prisma Extension (getTenantClient) + NextAuth authOptions + safe-action 미들웨어 + middleware.ts
 - [ ] 01-04-PLAN.md — 로그인 UI + 사용자 관리 페이지 + user-actions + 사이드바 메뉴
@@ -110,7 +110,7 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Auth + Multi-Tenant Foundation | 0/5 | Not started | - |
+| 1. Auth + Multi-Tenant Foundation | 1/5 | In Progress|  |
 | 2. Audit Logging | 0/TBD | Not started | - |
 | 3. Loan Lifecycle Extensions | 0/TBD | Not started | - |
 | 4. In-App Notifications | 0/TBD | Not started | - |

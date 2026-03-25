@@ -6,9 +6,44 @@ datasource db {
   provider = "postgresql"
 }
 
+model Organization {
+  id           String    @id @default(cuid())
+  name         String
+  slug         String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  users        User[]
+  customers    Customer[]
+  collaterals  Collateral[]
+  mortgages    Mortgage[]
+  loans        Loan[]
+  loanSchedules LoanSchedule[]
+  payments     Payment[]
+  settings     Setting[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  username       String       @unique
+  passwordHash   String
+  name           String
+  role           String       @default("STAFF") // ADMIN, STAFF
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("users")
+}
+
 model Customer {
   id             String       @id @default(cuid())
-  customerNumber String       @unique // C-NNNN 자동생성
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  customerNumber String       // C-NNNN 자동생성
   name           String
   customerType   String       @default("INDIVIDUAL") // INDIVIDUAL, CORPORATE
   residentNumber String?      // 암호화 저장
@@ -23,11 +58,14 @@ model Customer {
   collaterals    Collateral[]
   loans          Loan[]
 
+  @@unique([organizationId, customerNumber])
   @@map("customers")
 }
 
 model Collateral {
   id              String     @id @default(cuid())
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
   customerId      String
   customer        Customer   @relation(fields: [customerId], references: [id])
   collateralType  String     // APARTMENT, HOUSE, LAND, BUILDING, OFFICETEL, OTHER
@@ -46,6 +84,8 @@ model Collateral {
 
 model Mortgage {
   id              String     @id @default(cuid())
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
   collateralId    String
   collateral      Collateral @relation(fields: [collateralId], references: [id])
   rank            Int        // 순위
@@ -62,7 +102,9 @@ model Mortgage {
 
 model Loan {
   id              String         @id @default(cuid())
-  loanNumber      String         @unique // YYYYMMDD-NNNN
+  organizationId  String?
+  organization    Organization?  @relation(fields: [organizationId], references: [id])
+  loanNumber      String         // YYYYMMDD-NNNN
   customerId      String
   customer        Customer       @relation(fields: [customerId], references: [id])
   collateralId    String?
@@ -83,11 +125,14 @@ model Loan {
   schedules       LoanSchedule[]
   payments        Payment[]
 
+  @@unique([organizationId, loanNumber])
   @@map("loans")
 }
 
 model LoanSchedule {
   id                String    @id @default(cuid())
+  organizationId    String?
+  organization      Organization? @relation(fields: [organizationId], references: [id])
   loanId            String
   loan              Loan      @relation(fields: [loanId], references: [id], onDelete: Cascade)
   installmentNumber Int       // 회차
@@ -107,6 +152,8 @@ model LoanSchedule {
 
 model Payment {
   id              String   @id @default(cuid())
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
   loanId          String
   loan            Loan     @relation(fields: [loanId], references: [id])
   paymentDate     DateTime @db.Date
@@ -122,10 +169,13 @@ model Payment {
 }
 
 model Setting {
-  id    String @id @default(cuid())
-  key   String @unique
-  value String
-  label String?
+  id             String  @id @default(cuid())
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  key            String
+  value          String
+  label          String?
 
+  @@unique([organizationId, key])
   @@map("settings")
 }

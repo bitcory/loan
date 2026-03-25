@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-03-25T22:59:39.694Z"
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-03-25T23:13:36.881Z"
 last_activity: 2026-03-25
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 5
   percent: 40
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 ## Current Position
 
 Phase: 1 of 6 (Auth + Multi-Tenant Foundation)
-Plan: 3 of 5 in current phase (Phase 1)
+Plan: 5 of 5 in current phase (Phase 1)
 Status: In progress
 Last activity: 2026-03-25
 
@@ -55,6 +55,7 @@ Progress: [████░░░░░░] 40%
 | Phase 01 P01 | 7 min | 2 tasks | 6 files |
 | Phase 01 P02 | 8 min | 2 tasks | 8 files |
 | Phase 01 P03 | 3 minutes | 2 tasks | 8 files |
+| Phase 01 P05 | 25 | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Used JWT strategy (no database sessions) — no @auth/prisma-adapter installed
 - [Phase 01]: getTenantClient uses Prisma $extends to auto-inject organizationId on 7 tenant models; User excluded for auth-time queries
 - [Phase 01]: next-safe-action v8 createSafeActionClient with .use() middleware chain for session-scoped DB context injection
+- [Phase 01]: Read functions remain plain async; only mutations are safe-action wrapped for Server Component compatibility
+- [Phase 01]: organizationId explicitly passed in create data despite TenantDb interceptor — required by TypeScript create input types
+- [Phase 01]: processPayment uses sequential ctx.db operations instead of prisma.$transaction to maintain tenant isolation through extended client
 
 ### Pending Todos
 
@@ -89,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T22:59:39.676Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-03-25T23:13:36.864Z
+Stopped at: Completed 01-05-PLAN.md
 Resume file: None

@@ -12,7 +12,7 @@
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Auth + Multi-Tenant Foundation** - 멀티테넌트 데이터 격리 및 인증/RBAC 기반 구축 (모든 후속 작업의 전제조건)
+- [x] **Phase 1: Auth + Multi-Tenant Foundation** - 멀티테넌트 데이터 격리 및 인증/RBAC 기반 구축 (모든 후속 작업의 전제조건) (completed 2026-03-25)
 - [ ] **Phase 2: Audit Logging** - 모든 금융 데이터 변경에 대한 불변 감사 로그 인프라 구축
 - [ ] **Phase 3: Loan Lifecycle Extensions** - 대출 연장, 중도상환, 일괄 연체 처리 등 핵심 운영 기능 추가
 - [ ] **Phase 4: In-App Notifications** - 연체/만기/수납 이벤트 기반 인앱 알림 시스템 구축
@@ -38,8 +38,8 @@ Plans:
 - [x] 01-01-PLAN.md — Prisma 스키마: Organization/User 모델 + nullable organizationId FK (Migration 1) + 세션 타입
 - [x] 01-02-PLAN.md — 기본 조직 seed + backfill + NOT NULL 강제 (Migration 2 완료)
 - [x] 01-03-PLAN.md — Prisma Extension (getTenantClient) + NextAuth authOptions + safe-action 미들웨어 + middleware.ts
-- [ ] 01-04-PLAN.md — 로그인 UI + 사용자 관리 페이지 + user-actions + 사이드바 메뉴
-- [ ] 01-05-PLAN.md — 기존 4개 action 파일 safe-action 마이그레이션 (findUnique→findFirst, ctx.db 교체)
+- [x] 01-04-PLAN.md — 로그인 UI + 사용자 관리 페이지 + user-actions + 사이드바 메뉴
+- [x] 01-05-PLAN.md — 기존 4개 action 파일 safe-action 마이그레이션 (findUnique→findFirst, ctx.db 교체)
 
 ### Phase 2: Audit Logging
 **Goal**: 모든 금융 데이터 변경이 수정/삭제 불가능한 감사 로그로 자동 기록되어 관리자가 조회할 수 있다
@@ -110,7 +110,7 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Auth + Multi-Tenant Foundation | 3/5 | In Progress|  |
+| 1. Auth + Multi-Tenant Foundation | 5/5 | Complete   | 2026-03-25 |
 | 2. Audit Logging | 0/TBD | Not started | - |
 | 3. Loan Lifecycle Extensions | 0/TBD | Not started | - |
 | 4. In-App Notifications | 0/TBD | Not started | - |

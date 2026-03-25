@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-01-PLAN.md — Prisma schema + NextAuth types
-last_updated: "2026-03-25T22:45:57.237Z"
+stopped_at: Completed 01-02-PLAN.md — Seed default org + backfill + NOT NULL migration
+last_updated: "2026-03-26T00:00:00.000Z"
 last_activity: 2026-03-26 — Roadmap created, 56 requirements mapped across 6 phases
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
-  percent: 20
+  completed_plans: 2
+  percent: 40
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 ## Current Position
 
 Phase: 1 of 6 (Auth + Multi-Tenant Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-26 — Roadmap created, 56 requirements mapped across 6 phases
+Plan: 2 of 5 in current phase (Phase 1)
+Status: In progress
+Last activity: 2026-03-26 — Plan 01-02 complete: seed, backfill, NOT NULL migration
 
-Progress: [██░░░░░░░░] 20%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -52,7 +52,8 @@ Progress: [██░░░░░░░░] 20%
 - Trend: -
 
 *Updated after each plan completion*
-| Phase 01 P01 | 7 | 2 tasks | 6 files |
+| Phase 01 P01 | 7 min | 2 tasks | 6 files |
+| Phase 01 P02 | 8 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Pre-Phase 1]: exceljs (not SheetJS/xlsx) for Excel export — SheetJS has post-v18.5 npm security issues
 - [Phase 01]: Nullable organizationId (String?) chosen for step 1 of 3-step migration — backfill and NOT NULL in later plans
 - [Phase 01]: migrate deploy used instead of migrate dev in non-interactive CI environments — manually authored migration SQL
+- [Phase 01-02]: Backfill script placed in prisma/scripts/ (not prisma/migrations/) — Prisma treats any migrations/ subdirectory as a migration requiring migration.sql
+- [Phase 01-02]: DEFAULT_ORG_ID bridge constant added to action files' create operations — temporary until 01-03 session auth wires organizationId from session
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T22:45:57.219Z
-Stopped at: Completed 01-01-PLAN.md — Prisma schema + NextAuth types
+Last session: 2026-03-26T00:00:00.000Z
+Stopped at: Completed 01-02-PLAN.md — Seed default org + backfill + NOT NULL migration
 Resume file: None

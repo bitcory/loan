@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { collateralSchema, mortgageSchema } from "@/lib/validators";
 import { revalidatePath } from "next/cache";
 
+// TODO(01-03): Replace with session-derived organizationId
+const DEFAULT_ORG_ID = "default-org-001";
+
 export async function getCollaterals(params?: {
   search?: string;
   customerId?: string;
@@ -64,7 +67,7 @@ export async function createCollateral(data: FormData) {
   }
 
   const collateral = await prisma.collateral.create({
-    data: parsed.data,
+    data: { ...parsed.data, organizationId: DEFAULT_ORG_ID },
   });
 
   revalidatePath("/collaterals");
@@ -122,7 +125,7 @@ export async function createMortgage(data: FormData) {
     return { error: parsed.error.flatten().fieldErrors };
   }
 
-  await prisma.mortgage.create({ data: parsed.data });
+  await prisma.mortgage.create({ data: { ...parsed.data, organizationId: DEFAULT_ORG_ID } });
   revalidatePath("/collaterals");
   return { success: true };
 }

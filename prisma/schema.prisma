@@ -41,8 +41,8 @@ model User {
 
 model Customer {
   id             String       @id @default(cuid())
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
   customerNumber String       // C-NNNN 자동생성
   name           String
   customerType   String       @default("INDIVIDUAL") // INDIVIDUAL, CORPORATE
@@ -64,8 +64,8 @@ model Customer {
 
 model Collateral {
   id              String     @id @default(cuid())
-  organizationId  String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
   customerId      String
   customer        Customer   @relation(fields: [customerId], references: [id])
   collateralType  String     // APARTMENT, HOUSE, LAND, BUILDING, OFFICETEL, OTHER
@@ -84,8 +84,8 @@ model Collateral {
 
 model Mortgage {
   id              String     @id @default(cuid())
-  organizationId  String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
   collateralId    String
   collateral      Collateral @relation(fields: [collateralId], references: [id])
   rank            Int        // 순위
@@ -102,8 +102,8 @@ model Mortgage {
 
 model Loan {
   id              String         @id @default(cuid())
-  organizationId  String?
-  organization    Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  organization    Organization   @relation(fields: [organizationId], references: [id])
   loanNumber      String         // YYYYMMDD-NNNN
   customerId      String
   customer        Customer       @relation(fields: [customerId], references: [id])
@@ -131,8 +131,8 @@ model Loan {
 
 model LoanSchedule {
   id                String    @id @default(cuid())
-  organizationId    String?
-  organization      Organization? @relation(fields: [organizationId], references: [id])
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id])
   loanId            String
   loan              Loan      @relation(fields: [loanId], references: [id], onDelete: Cascade)
   installmentNumber Int       // 회차
@@ -152,8 +152,8 @@ model LoanSchedule {
 
 model Payment {
   id              String   @id @default(cuid())
-  organizationId  String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
   loanId          String
   loan            Loan     @relation(fields: [loanId], references: [id])
   paymentDate     DateTime @db.Date
@@ -170,8 +170,8 @@ model Payment {
 
 model Setting {
   id             String  @id @default(cuid())
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
   key            String
   value          String
   label          String?

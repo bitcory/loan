@@ -6,6 +6,9 @@ import { encrypt, decrypt } from "@/lib/encryption";
 import { generateCustomerNumber } from "@/lib/customer-number";
 import { revalidatePath } from "next/cache";
 
+// TODO(01-03): Replace with session-derived organizationId
+const DEFAULT_ORG_ID = "default-org-001";
+
 export async function getCustomers(params?: {
   search?: string;
   type?: string;
@@ -82,6 +85,7 @@ export async function createCustomer(data: FormData) {
   const customer = await prisma.customer.create({
     data: {
       ...rest,
+      organizationId: DEFAULT_ORG_ID,
       customerNumber,
       residentNumber: encrypted,
     },

@@ -8,6 +8,9 @@ import { revalidatePath } from "next/cache";
 import { Decimal } from "decimal.js";
 import { addMonths, parseISO } from "date-fns";
 
+// TODO(01-03): Replace with session-derived organizationId
+const DEFAULT_ORG_ID = "default-org-001";
+
 export async function getLoans(params?: {
   search?: string;
   status?: string;
@@ -82,6 +85,7 @@ export async function createLoan(data: FormData) {
 
   const loan = await prisma.loan.create({
     data: {
+      organizationId: DEFAULT_ORG_ID,
       loanNumber,
       customerId,
       collateralId: collateralId || null,
@@ -96,6 +100,7 @@ export async function createLoan(data: FormData) {
       memo: memo || null,
       schedules: {
         create: scheduleItems.map((s) => ({
+          organizationId: DEFAULT_ORG_ID,
           installmentNumber: s.installmentNumber,
           dueDate: s.dueDate,
           principalAmount: s.principalAmount.toNumber(),
@@ -133,6 +138,7 @@ export async function processPayment(data: FormData) {
     // 수납 기록 생성
     await tx.payment.create({
       data: {
+        organizationId: DEFAULT_ORG_ID,
         loanId,
         paymentDate: parseISO(paymentDate),
         principalAmount,

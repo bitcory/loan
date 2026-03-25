@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -15,6 +16,7 @@ import {
   Columns3,
   Menu,
   X,
+  UserCog,
 } from "lucide-react";
 
 const navItems = [
@@ -31,6 +33,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   // 경로 변경 시 모바일 메뉴 닫기
   useEffect(() => {
@@ -116,6 +119,20 @@ export function Sidebar() {
               </Link>
             );
           })}
+          {session?.user?.role === "ADMIN" && (
+            <Link
+              href="/settings/users"
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                pathname === "/settings/users" || pathname.startsWith("/settings/users/")
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <UserCog className="h-4 w-4" />
+              사용자 관리
+            </Link>
+          )}
         </nav>
       </aside>
     </>

@@ -68,7 +68,13 @@ Plans:
   3. 중도상환수수료율이 대출별/조직별로 설정 가능하며 법정 상한이 적용된다
   4. 매일 자동으로 연체 상태가 업데이트되고, 관리자가 수동으로 일괄 연체 처리를 실행할 수 있다
   5. 일괄 연체 처리가 원자적으로 실행되어 부분 실패가 발생하지 않는다
-**Plans**: TBD
+**Plans**: 4
+
+Plans:
+- [x] 03-01-PLAN.md — Prisma 스키마 + 대출 수명주기 계산기 라이브러리
+- [x] 03-02-PLAN.md — loan-lifecycle-actions.ts: extendLoan, calculatePrepayment, processPrepayment, processBatchOverdue
+- [x] 03-03-PLAN.md — loan-calculator.ts: calculatePrepaymentFee, recalculateSchedule, settleOverdueInterest
+- [x] 03-04-PLAN.md — UI 컴포넌트: ExtendLoanDialog, PrepaymentDialog, BatchOverdueButton + 페이지 통합
 
 ### Phase 4: In-App Notifications
 **Goal**: 사용자가 헤더의 알림 벨 아이콘으로 연체/만기/수납 이벤트를 실시간으로 인지하고 관련 항목으로 이동할 수 있다
@@ -118,7 +124,7 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 |-------|----------------|--------|-----------|
 | 1. Auth + Multi-Tenant Foundation | 5/5 | Complete   | 2026-03-25 |
 | 2. Audit Logging | 4/4 | Complete   | 2026-03-26 |
-| 3. Loan Lifecycle Extensions | 3/4 | In Progress|  |
+| 3. Loan Lifecycle Extensions | 4/4 | Complete   | 2026-03-26 |
 | 4. In-App Notifications | 0/TBD | Not started | - |
 | 5. PDF Document Generation | 0/TBD | Not started | - |
 | 6. Search, Export & Dashboard | 0/TBD | Not started | - |

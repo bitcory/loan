@@ -36,12 +36,12 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Loan Lifecycle (대출 라이프사이클)
 
 - [ ] **LOAN-01**: 관리자가 대출 만기를 연장할 수 있다 (새 만기일, 금리 변경 가능)
-- [ ] **LOAN-02**: 대출 연장 시 기존 연체이자가 정산되어야 한다
-- [ ] **LOAN-03**: 대출 연장 시 상환스케줄이 연장일부터 재계산된다
-- [ ] **LOAN-04**: 차주가 전액 중도상환 시 잔여원금+경과이자+수수료가 계산된다
-- [ ] **LOAN-05**: 차주가 일부 중도상환 시 잔여 스케줄이 재계산된다
-- [ ] **LOAN-06**: 중도상환수수료율이 대출별/조직별로 설정 가능하다
-- [ ] **LOAN-07**: 중도상환 확인 전 수수료 예상액이 표시된다
+- [x] **LOAN-02**: 대출 연장 시 기존 연체이자가 정산되어야 한다
+- [x] **LOAN-03**: 대출 연장 시 상환스케줄이 연장일부터 재계산된다
+- [x] **LOAN-04**: 차주가 전액 중도상환 시 잔여원금+경과이자+수수료가 계산된다
+- [x] **LOAN-05**: 차주가 일부 중도상환 시 잔여 스케줄이 재계산된다
+- [x] **LOAN-06**: 중도상환수수료율이 대출별/조직별로 설정 가능하다
+- [x] **LOAN-07**: 중도상환 확인 전 수수료 예상액이 표시된다
 - [ ] **LOAN-08**: 매일 자동으로 연체 상태가 업데이트된다 (일괄 연체 처리)
 - [ ] **LOAN-09**: 관리자가 수동으로 연체 일괄 처리를 실행할 수 있다
 - [ ] **LOAN-10**: 일괄 연체 처리가 트랜잭션 내에서 원자적으로 실행된다
@@ -144,12 +144,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | AUDIT-04 | Phase 2 | Complete |
 | AUDIT-05 | Phase 2 | Pending |
 | LOAN-01 | Phase 3 | Pending |
-| LOAN-02 | Phase 3 | Pending |
-| LOAN-03 | Phase 3 | Pending |
-| LOAN-04 | Phase 3 | Pending |
-| LOAN-05 | Phase 3 | Pending |
-| LOAN-06 | Phase 3 | Pending |
-| LOAN-07 | Phase 3 | Pending |
+| LOAN-02 | Phase 3 | Complete |
+| LOAN-03 | Phase 3 | Complete |
+| LOAN-04 | Phase 3 | Complete |
+| LOAN-05 | Phase 3 | Complete |
+| LOAN-06 | Phase 3 | Complete |
+| LOAN-07 | Phase 3 | Complete |
 | LOAN-08 | Phase 3 | Pending |
 | LOAN-09 | Phase 3 | Pending |
 | LOAN-10 | Phase 3 | Pending |

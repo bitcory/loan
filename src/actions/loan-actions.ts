@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import { Decimal } from "decimal.js";
 import { addMonths, parseISO } from "date-fns";
 import { z } from "zod";
+import { logAudit, sanitizeForLog, getClientIp } from "@/lib/audit";
 
 // ---- READ functions (called from Server Components) ----
 
@@ -306,6 +307,15 @@ export const createLoan = authenticatedAction
       },
     });
 
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Loan",
+      loan.id,
+      "CREATE",
+      null,
+      sanitizeForLog({ loanNumber: loan.loanNumber, customerId, collateralId: collateralId || null, loanAmount, interestRate, repaymentType, loanTermMonths, memo: memo || null }),
+    );
+
     revalidatePath("/loans");
     revalidatePath("/dashboard");
     return { success: true, id: loan.id, loanNumber };
@@ -323,7 +333,7 @@ export const processPayment = authenticatedAction
     const newBalance = new Decimal(loan.balance.toString()).minus(principalAmount);
 
     // Payment 생성
-    await ctx.db.payment.create({
+    const createdPayment = await ctx.db.payment.create({
       data: {
         organizationId: ctx.organizationId,
         loanId,
@@ -336,6 +346,15 @@ export const processPayment = authenticatedAction
       },
     });
 
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Payment",
+      createdPayment.id,
+      "CREATE",
+      null,
+      sanitizeForLog({ loanId, paymentDate, principalAmount, interestAmount, overdueAmount: overdueAmount || 0, totalAmount }),
+    );
+
     // 대출 잔액 업데이트
     const updateData: Record<string, unknown> = {
       balance: newBalance.toNumber(),
@@ -344,6 +363,15 @@ export const processPayment = authenticatedAction
       updateData.status = "COMPLETED";
     }
     await ctx.db.loan.update({ where: { id: loanId }, data: updateData });
+
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Loan",
+      loanId,
+      "UPDATE",
+      sanitizeForLog(loan as unknown as Record<string, unknown>),
+      sanitizeForLog({ balance: newBalance.toNumber(), status: (updateData.status ?? loan.status) as string }),
+    );
 
     // 스케줄 상태 업데이트
     if (scheduleId) {
@@ -373,7 +401,19 @@ export const processPayment = authenticatedAction
 export const deleteLoan = adminAction
   .schema(z.object({ id: z.string() }))
   .action(async ({ parsedInput, ctx }) => {
+    const existing = await ctx.db.loan.findFirst({ where: { id: parsedInput.id } });
+
     await ctx.db.loan.delete({ where: { id: parsedInput.id } });
+
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Loan",
+      parsedInput.id,
+      "DELETE",
+      existing ? sanitizeForLog(existing as unknown as Record<string, unknown>) : null,
+      null,
+    );
+
     revalidatePath("/loans");
     revalidatePath("/dashboard");
     return { success: true };

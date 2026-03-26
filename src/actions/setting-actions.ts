@@ -6,6 +6,7 @@ import { getTenantClient } from "@/lib/prisma";
 import { adminAction } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { logAudit, sanitizeForLog, getClientIp } from "@/lib/audit";
 
 // ---- READ functions (called from Server Components) ----
 
@@ -61,6 +62,15 @@ export const updateSettings = adminAction
       }
     }
 
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Setting",
+      ctx.organizationId,
+      "UPDATE",
+      null,
+      sanitizeForLog(parsedInput as unknown as Record<string, unknown>),
+    );
+
     revalidatePath("/settings");
     return { success: true };
   });
@@ -91,6 +101,15 @@ export const updateSetting = adminAction
         },
       });
     }
+
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Setting",
+      parsedInput.key,
+      "UPDATE",
+      existing ? sanitizeForLog(existing as unknown as Record<string, unknown>) : null,
+      sanitizeForLog({ key: parsedInput.key, value: parsedInput.value }),
+    );
 
     revalidatePath("/settings");
     return { success: true };

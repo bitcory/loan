@@ -9,6 +9,7 @@ import { encrypt, decrypt } from "@/lib/encryption";
 import { generateCustomerNumber } from "@/lib/customer-number";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { logAudit, sanitizeForLog, getClientIp } from "@/lib/audit";
 
 // ---- READ functions (called from Server Components) ----
 
@@ -110,6 +111,15 @@ export const createCustomer = authenticatedAction
       },
     });
 
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Customer",
+      customer.id,
+      "CREATE",
+      null,
+      sanitizeForLog({ ...rest, customerNumber, residentNumber: residentNumber ?? null }),
+    );
+
     revalidatePath("/customers");
     return { success: true, id: customer.id };
   });
@@ -120,6 +130,8 @@ export const updateCustomer = authenticatedAction
     const { residentNumber, ...rest } = parsedInput.data;
     const encrypted = residentNumber ? encrypt(residentNumber.replace(/-/g, "")) : undefined;
 
+    const existing = await ctx.db.customer.findFirst({ where: { id: parsedInput.id } });
+
     await ctx.db.customer.update({
       where: { id: parsedInput.id },
       data: {
@@ -127,6 +139,15 @@ export const updateCustomer = authenticatedAction
         ...(encrypted !== undefined && { residentNumber: encrypted }),
       },
     });
+
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Customer",
+      parsedInput.id,
+      "UPDATE",
+      existing ? sanitizeForLog(existing as unknown as Record<string, unknown>) : null,
+      sanitizeForLog({ ...rest, residentNumber: residentNumber ?? null }),
+    );
 
     revalidatePath("/customers");
     revalidatePath(`/customers/${parsedInput.id}`);
@@ -144,7 +165,19 @@ export const deleteCustomer = adminAction
       throw new Error("활성 대출이 있는 고객은 삭제할 수 없습니다.");
     }
 
+    const existing = await ctx.db.customer.findFirst({ where: { id: parsedInput.id } });
+
     await ctx.db.customer.delete({ where: { id: parsedInput.id } });
+
+    await logAudit(
+      { userId: ctx.userId, organizationId: ctx.organizationId, ipAddress: getClientIp() },
+      "Customer",
+      parsedInput.id,
+      "DELETE",
+      existing ? sanitizeForLog(existing as unknown as Record<string, unknown>) : null,
+      null,
+    );
+
     revalidatePath("/customers");
     return { success: true };
   });

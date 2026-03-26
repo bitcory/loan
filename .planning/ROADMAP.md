@@ -50,7 +50,13 @@ Plans:
   2. 기록된 감사 로그는 어떤 사용자도 수정하거나 삭제할 수 없다
   3. 감사 로그에서 주민번호 등 민감정보는 마스킹 처리되어 표시된다
   4. 관리자가 감사 로그 목록을 조회하는 페이지에 접근할 수 있다
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [x] 02-01-PLAN.md — AuditLog Prisma 스키마 + PostgreSQL RULE append-only 마이그레이션
+- [x] 02-02-PLAN.md — src/lib/audit.ts (logAudit, maskPii, sanitizeForLog, getClientIp)
+- [ ] 02-03-PLAN.md — 4개 액션 파일 15개 뮤테이션에 logAudit() 호출 추가
+- [ ] 02-04-PLAN.md — 관리자 감사 로그 조회 페이지 (/audit-logs) + 사이드바 메뉴
 
 ### Phase 3: Loan Lifecycle Extensions
 **Goal**: 관리자와 직원이 대출 만기 연장, 중도상환, 일괄 연체 처리 등 전체 대출 운영 워크플로우를 수행할 수 있다
@@ -111,7 +117,7 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Auth + Multi-Tenant Foundation | 5/5 | Complete   | 2026-03-25 |
-| 2. Audit Logging | 0/TBD | Not started | - |
+| 2. Audit Logging | 2/4 | In Progress|  |
 | 3. Loan Lifecycle Extensions | 0/TBD | Not started | - |
 | 4. In-App Notifications | 0/TBD | Not started | - |
 | 5. PDF Document Generation | 0/TBD | Not started | - |

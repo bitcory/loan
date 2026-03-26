@@ -28,9 +28,9 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Audit Logging (감사 로그)
 
 - [ ] **AUDIT-01**: 모든 금융 데이터 변경(생성/수정/삭제)이 자동으로 기록된다
-- [ ] **AUDIT-02**: 감사 로그에 변경 전/후 값, 사용자, 시간, IP가 기록된다
+- [x] **AUDIT-02**: 감사 로그에 변경 전/후 값, 사용자, 시간, IP가 기록된다
 - [ ] **AUDIT-03**: 감사 로그는 수정/삭제 불가 (append-only)
-- [ ] **AUDIT-04**: 주민번호 등 민감정보는 감사 로그에서 마스킹된다
+- [x] **AUDIT-04**: 주민번호 등 민감정보는 감사 로그에서 마스킹된다
 - [ ] **AUDIT-05**: 관리자가 감사 로그를 조회할 수 있다
 
 ### Loan Lifecycle (대출 라이프사이클)
@@ -139,9 +139,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | AUTH-06 | Phase 1 | Pending |
 | AUTH-07 | Phase 1 | Pending |
 | AUDIT-01 | Phase 2 | Pending |
-| AUDIT-02 | Phase 2 | Pending |
+| AUDIT-02 | Phase 2 | Complete |
 | AUDIT-03 | Phase 2 | Pending |
-| AUDIT-04 | Phase 2 | Pending |
+| AUDIT-04 | Phase 2 | Complete |
 | AUDIT-05 | Phase 2 | Pending |
 | LOAN-01 | Phase 3 | Pending |
 | LOAN-02 | Phase 3 | Pending |

@@ -118,8 +118,9 @@ model Loan {
   endDate         DateTime       @db.Date
   status          String         @default("ACTIVE") // PENDING, ACTIVE, COMPLETED, OVERDUE, DEFAULT
   overdueStage    String         @default("NORMAL") // NORMAL, STAGE_1, STAGE_2, STAGE_3, BAD_DEBT
-  overdueDays     Int            @default(0)
-  memo            String?
+  overdueDays       Int            @default(0)
+  prepaymentFeeRate Decimal?       @db.Decimal(5, 2) // 대출별 중도상환수수료율 (%)
+  memo              String?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   schedules       LoanSchedule[]

@@ -15,6 +15,8 @@ import {
 import { formatCurrency, formatDate, formatPercent } from "@/lib/formatters";
 import { REPAYMENT_TYPE_LABELS } from "@/lib/constants";
 import { PaymentDialog } from "@/components/loans/payment-dialog";
+import { ExtendLoanDialog } from "@/components/loans/extend-loan-dialog";
+import { PrepaymentDialog } from "@/components/loans/prepayment-dialog";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   ACTIVE: { label: "활성", variant: "default" },
@@ -57,6 +59,19 @@ export default async function LoanDetailPage({
             status: s.status,
           }))}
         />
+        {loan.status !== "COMPLETED" && (
+          <ExtendLoanDialog
+            loanId={loan.id}
+            currentEndDate={loan.endDate}
+            currentInterestRate={loan.interestRate}
+          />
+        )}
+        {(loan.status === "ACTIVE" || loan.status === "OVERDUE") && (
+          <PrepaymentDialog
+            loanId={loan.id}
+            currentBalance={loan.balance}
+          />
+        )}
       </PageHeader>
 
       <div className="grid gap-6 md:grid-cols-2">

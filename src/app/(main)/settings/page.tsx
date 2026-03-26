@@ -7,6 +7,7 @@ const DEFAULT_SETTINGS = [
   { key: "default_interest_rate", label: "기본 이율 (%)", defaultValue: "15" },
   { key: "max_interest_rate", label: "법정 최고이율 (%)", defaultValue: "20" },
   { key: "overdue_rate_addition", label: "연체가산이율 (%)", defaultValue: "3" },
+  { key: "prepayment_fee_rate", label: "중도상환수수료율 (%)", defaultValue: "0" },
   { key: "company_name", label: "회사명", defaultValue: "대부전산" },
 ];
 

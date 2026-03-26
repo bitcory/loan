@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { getOverdueLoans } from "@/actions/loan-actions";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatNumber, formatPhoneNumber } from "@/lib/formatters";
 import { OVERDUE_STAGE_LABELS } from "@/lib/constants";
+import { BatchOverdueButton } from "@/components/loans/batch-overdue-button";
 
 function getStageBadgeVariant(stage: string) {
   switch (stage) {
@@ -31,6 +34,8 @@ export default async function OverduePage({
   const params = await searchParams;
   const stage = params.stage || "ALL";
   const page = parseInt(params.page || "1", 10);
+  const session = await getServerSession(authOptions);
+  const isAdmin = session?.user?.role === "ADMIN";
 
   const { overdueLoans, total } = await getOverdueLoans({
     stage,
@@ -50,7 +55,9 @@ export default async function OverduePage({
       <PageHeader
         title="연체관리"
         description={`총 ${total}건의 연체 대출`}
-      />
+      >
+        {isAdmin && <BatchOverdueButton />}
+      </PageHeader>
 
       <Card>
         <CardContent className="p-0">

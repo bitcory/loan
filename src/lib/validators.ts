@@ -71,8 +71,30 @@ export const paymentSchema = z.object({
   memo: z.string().optional(),
 });
 
+export const extendLoanSchema = z.object({
+  loanId: z.string().min(1, "대출을 선택해주세요"),
+  newEndDate: z.string().min(1, "새 만기일을 입력해주세요"),
+  newInterestRate: z.coerce
+    .number()
+    .positive("이율을 입력해주세요")
+    .max(20, "법정 최고이율(20%)을 초과할 수 없습니다")
+    .optional(),
+  settleOverdueNow: z.boolean().default(true), // 연체이자 즉시 정산 여부
+  memo: z.string().optional(),
+});
+
+export const prepaymentSchema = z.object({
+  loanId: z.string().min(1, "대출을 선택해주세요"),
+  prepaymentDate: z.string().min(1, "중도상환일을 입력해주세요"),
+  prepaymentType: z.enum(["FULL", "PARTIAL"]), // 전액 / 일부
+  prepaymentAmount: z.coerce.number().positive("상환금액을 입력해주세요").optional(),
+  memo: z.string().optional(),
+});
+
 export type CustomerFormData = z.infer<typeof customerSchema>;
 export type CollateralFormData = z.infer<typeof collateralSchema>;
 export type MortgageFormData = z.infer<typeof mortgageSchema>;
 export type LoanFormData = z.infer<typeof loanSchema>;
 export type PaymentFormData = z.infer<typeof paymentSchema>;
+export type ExtendLoanFormData = z.infer<typeof extendLoanSchema>;
+export type PrepaymentFormData = z.infer<typeof prepaymentSchema>;

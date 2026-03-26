@@ -17,6 +17,7 @@ import {
   Menu,
   X,
   UserCog,
+  ClipboardList,
 } from "lucide-react";
 
 const navItems = [
@@ -131,6 +132,20 @@ export function Sidebar() {
             >
               <UserCog className="h-4 w-4" />
               사용자 관리
+            </Link>
+          )}
+          {session?.user?.role === "ADMIN" && (
+            <Link
+              href="/audit-logs"
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                pathname === "/audit-logs" || pathname.startsWith("/audit-logs/")
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <ClipboardList className="h-4 w-4" />
+              감사 로그
             </Link>
           )}
         </nav>

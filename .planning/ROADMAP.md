@@ -118,7 +118,7 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 |-------|----------------|--------|-----------|
 | 1. Auth + Multi-Tenant Foundation | 5/5 | Complete   | 2026-03-25 |
 | 2. Audit Logging | 4/4 | Complete   | 2026-03-26 |
-| 3. Loan Lifecycle Extensions | 0/TBD | Not started | - |
+| 3. Loan Lifecycle Extensions | 3/4 | In Progress|  |
 | 4. In-App Notifications | 0/TBD | Not started | - |
 | 5. PDF Document Generation | 0/TBD | Not started | - |
 | 6. Search, Export & Dashboard | 0/TBD | Not started | - |

@@ -12,6 +12,7 @@ import { Decimal } from "decimal.js";
 import { addMonths, parseISO } from "date-fns";
 import { z } from "zod";
 import { logAudit, sanitizeForLog, getClientIp } from "@/lib/audit";
+import { createNotificationsForOrg } from "@/lib/notifications";
 
 // ---- READ functions (called from Server Components) ----
 
@@ -260,6 +261,55 @@ export async function getMonthlyStats() {
   return Object.values(monthlyData);
 }
 
+export async function getDashboardExtended() {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("인증이 필요합니다.");
+  const db = getTenantClient(session.user.organizationId);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const day30 = new Date(today); day30.setDate(day30.getDate() + 30);
+  const day60 = new Date(today); day60.setDate(day60.getDate() + 60);
+  const day90 = new Date(today); day90.setDate(day90.getDate() + 90);
+
+  // 만기 도래 현황 (30/60/90일)
+  const [maturity30, maturity60, maturity90, allActiveLoans] = await Promise.all([
+    db.loan.count({ where: { status: "ACTIVE", endDate: { gte: today, lte: day30 } } }),
+    db.loan.count({ where: { status: "ACTIVE", endDate: { gt: day30, lte: day60 } } }),
+    db.loan.count({ where: { status: "ACTIVE", endDate: { gt: day60, lte: day90 } } }),
+    db.loan.findMany({
+      where: { status: { in: ["ACTIVE", "OVERDUE", "COMPLETED"] } },
+      select: { loanAmount: true, collateral: { select: { appraisalValue: true } } },
+    }),
+  ]);
+
+  // LTV 분포 (담보 있는 대출만)
+  const ltvBuckets = { under50: 0, "50to70": 0, "70to80": 0, over80: 0 };
+  for (const loan of allActiveLoans) {
+    if (!loan.collateral?.appraisalValue) continue;
+    const ltv = (Number(loan.loanAmount) / Number(loan.collateral.appraisalValue)) * 100;
+    if (ltv < 50) ltvBuckets.under50++;
+    else if (ltv < 70) ltvBuckets["50to70"]++;
+    else if (ltv < 80) ltvBuckets["70to80"]++;
+    else ltvBuckets.over80++;
+  }
+
+  return {
+    maturity: [
+      { label: "30일 이내", count: maturity30 },
+      { label: "31~60일", count: maturity60 },
+      { label: "61~90일", count: maturity90 },
+    ],
+    ltvDistribution: [
+      { label: "50% 미만", count: ltvBuckets.under50 },
+      { label: "50~70%", count: ltvBuckets["50to70"] },
+      { label: "70~80%", count: ltvBuckets["70to80"] },
+      { label: "80% 이상", count: ltvBuckets.over80 },
+    ],
+  };
+}
+
 // ---- MUTATIONS (safe-action wrapped) ----
 
 export const createLoan = authenticatedAction
@@ -391,6 +441,16 @@ export const processPayment = authenticatedAction
         });
       }
     }
+
+    // 수납 완료 알림 (fire-and-forget)
+    void createNotificationsForOrg({
+      organizationId: ctx.organizationId,
+      type: "PAYMENT",
+      title: "수납 완료",
+      message: `대출 ${loan.loanNumber}에 ${totalAmount.toLocaleString()}원이 수납되었습니다.`,
+      entityType: "Loan",
+      entityId: loanId,
+    });
 
     revalidatePath("/loans");
     revalidatePath(`/loans/${loanId}`);

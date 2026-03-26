@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatNumber, formatPercent } from "@/lib/formatters";
 import { REPAYMENT_TYPE_LABELS } from "@/lib/constants";
-import { Plus } from "lucide-react";
+import { Plus, FileSpreadsheet } from "lucide-react";
 import { ClickableRow } from "@/components/shared/clickable-row";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
@@ -36,6 +36,12 @@ export default async function LoansPage({
   return (
     <>
       <PageHeader title="대출관리" description={`총 ${total}건`}>
+        <a href="/api/export?type=loans">
+          <Button variant="outline" size="sm">
+            <FileSpreadsheet className="h-4 w-4 mr-1" />
+            엑셀
+          </Button>
+        </a>
         <Link href="/loans/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />

@@ -1,14 +1,17 @@
-import { getDashboardStats, getMonthlyStats } from "@/actions/loan-actions";
+import { getDashboardStats, getMonthlyStats, getDashboardExtended } from "@/actions/loan-actions";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/formatters";
 import { Banknote, TrendingUp, AlertTriangle, CalendarCheck } from "lucide-react";
 import { DashboardChart } from "@/components/dashboard/dashboard-chart";
+import { DashboardMaturityChart } from "@/components/dashboard/dashboard-maturity-chart";
+import { DashboardLtvChart } from "@/components/dashboard/dashboard-ltv-chart";
 
 export default async function DashboardPage() {
-  const [stats, monthlyData] = await Promise.all([
+  const [stats, monthlyData, extended] = await Promise.all([
     getDashboardStats(),
     getMonthlyStats(),
+    getDashboardExtended(),
   ]);
 
   const cards = [
@@ -69,6 +72,25 @@ export default async function DashboardPage() {
           <DashboardChart data={monthlyData} />
         </CardContent>
       </Card>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>만기 도래 현황 (90일 이내)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DashboardMaturityChart data={extended.maturity} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>LTV 분포</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DashboardLtvChart data={extended.ltvDistribution} />
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }

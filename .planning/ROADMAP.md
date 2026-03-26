@@ -15,9 +15,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Auth + Multi-Tenant Foundation** - 멀티테넌트 데이터 격리 및 인증/RBAC 기반 구축 (모든 후속 작업의 전제조건) (completed 2026-03-25)
 - [x] **Phase 2: Audit Logging** - 모든 금융 데이터 변경에 대한 불변 감사 로그 인프라 구축 (completed 2026-03-26)
 - [ ] **Phase 3: Loan Lifecycle Extensions** - 대출 연장, 중도상환, 일괄 연체 처리 등 핵심 운영 기능 추가
-- [ ] **Phase 4: In-App Notifications** - 연체/만기/수납 이벤트 기반 인앱 알림 시스템 구축
-- [ ] **Phase 5: PDF Document Generation** - 대출계약서/상환스케줄표/수납영수증/담보평가서 PDF 출력
-- [ ] **Phase 6: Search, Export & Dashboard** - 고급 검색/필터, 엑셀 내보내기, 대시보드 고도화, 고객 메모, 백업, 다크모드
+- [x] **Phase 4: In-App Notifications** - 연체/만기/수납 이벤트 기반 인앱 알림 시스템 구축 (completed 2026-03-26)
+- [x] **Phase 5: PDF Document Generation** - 대출계약서/상환스케줄표/수납영수증/담보평가서 PDF 출력 (completed 2026-03-26)
+- [x] **Phase 6: Search, Export & Dashboard** - 고급 검색/필터, 엑셀 내보내기, 대시보드 고도화, 고객 메모, 백업, 다크모드 (completed 2026-03-26)
 
 ## Phase Details
 
@@ -125,6 +125,6 @@ Note: Phase 5 depends only on Phase 1 and can be executed after Phase 1 if neede
 | 1. Auth + Multi-Tenant Foundation | 5/5 | Complete   | 2026-03-25 |
 | 2. Audit Logging | 4/4 | Complete   | 2026-03-26 |
 | 3. Loan Lifecycle Extensions | 4/4 | Complete   | 2026-03-26 |
-| 4. In-App Notifications | 0/TBD | Not started | - |
-| 5. PDF Document Generation | 0/TBD | Not started | - |
-| 6. Search, Export & Dashboard | 0/TBD | Not started | - |
+| 4. In-App Notifications | 4/4 | Complete   | 2026-03-26 |
+| 5. PDF Document Generation | 3/3 | Complete   | 2026-03-26 |
+| 6. Search, Export & Dashboard | 4/4 | Complete   | 2026-03-26 |

@@ -1,6 +1,6 @@
 "use server";
 
-import { adminAction, authenticatedAction } from "@/lib/safe-action";
+import { adminAction } from "@/lib/safe-action";
 import { prisma } from "@/lib/prisma"; // basePrisma — User는 Extension 제외
 import { z } from "zod";
 import bcrypt from "bcryptjs";

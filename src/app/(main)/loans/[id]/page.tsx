@@ -17,6 +17,7 @@ import { REPAYMENT_TYPE_LABELS } from "@/lib/constants";
 import { PaymentDialog } from "@/components/loans/payment-dialog";
 import { ExtendLoanDialog } from "@/components/loans/extend-loan-dialog";
 import { PrepaymentDialog } from "@/components/loans/prepayment-dialog";
+import { PdfDownloadButtons } from "@/components/loans/pdf-download-buttons";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   ACTIVE: { label: "활성", variant: "default" },
@@ -72,6 +73,7 @@ export default async function LoanDetailPage({
             currentBalance={loan.balance}
           />
         )}
+        <PdfDownloadButtons loanId={loan.id} />
       </PageHeader>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -179,6 +181,7 @@ export default async function LoanDetailPage({
                       <TableHead className="text-right">연체이자</TableHead>
                       <TableHead className="text-right">합계</TableHead>
                       <TableHead>메모</TableHead>
+                      <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -190,6 +193,16 @@ export default async function LoanDetailPage({
                         <TableCell className="text-right">{formatCurrency(p.overdueAmount.toString())}</TableCell>
                         <TableCell className="text-right font-medium">{formatCurrency(p.totalAmount.toString())}</TableCell>
                         <TableCell>{p.memo || "-"}</TableCell>
+                        <TableCell>
+                          <a
+                            href={`/api/pdf/payment-receipt/${p.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary underline-offset-2 hover:underline"
+                          >
+                            영수증
+                          </a>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

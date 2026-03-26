@@ -60,6 +60,20 @@ model Customer {
 
   @@unique([organizationId, customerNumber])
   @@map("customers")
+  customerMemos  CustomerMemo[]
+}
+
+model CustomerMemo {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String
+  customer       Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  userId         String
+  content        String
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, customerId, createdAt])
+  @@map("customer_memos")
 }
 
 model Collateral {
@@ -179,6 +193,23 @@ model Setting {
 
   @@unique([organizationId, key])
   @@map("settings")
+}
+
+model Notification {
+  id             String    @id @default(cuid())
+  organizationId String
+  userId         String
+  type           String    // OVERDUE | MATURITY_7D | MATURITY_30D | PAYMENT
+  title          String
+  message        String
+  entityType     String    // Loan | Payment
+  entityId       String
+  isRead         Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+
+  @@index([organizationId, userId, isRead])
+  @@index([organizationId, createdAt])
+  @@map("notifications")
 }
 
 model AuditLog {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCustomer } from "@/actions/customer-actions";
+import { getCustomerMemos } from "@/actions/customer-memo-actions";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import { formatCurrency, formatDate, formatPhoneNumber, formatResidentNumber } f
 import { CUSTOMER_TYPE_LABELS, COLLATERAL_TYPE_LABELS } from "@/lib/constants";
 import { DeleteCustomerButton } from "@/components/customers/delete-customer-button";
 import { EditCustomerDialog } from "@/components/customers/edit-customer-dialog";
+import { CustomerMemoSection } from "@/components/customers/customer-memo-section";
 import { Plus } from "lucide-react";
 
 export default async function CustomerDetailPage({
@@ -25,7 +27,10 @@ export default async function CustomerDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const customer = await getCustomer(id);
+  const [customer, memos] = await Promise.all([
+    getCustomer(id),
+    getCustomerMemos(id),
+  ]);
   if (!customer) notFound();
 
   return (
@@ -153,6 +158,8 @@ export default async function CustomerDetailPage({
           )}
         </CardContent>
       </Card>
+
+      <CustomerMemoSection customerId={id} memos={memos} />
     </>
   );
 }

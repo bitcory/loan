@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatPhoneNumber } from "@/lib/formatters";
 import { CUSTOMER_TYPE_LABELS } from "@/lib/constants";
-import { Plus } from "lucide-react";
+import { Plus, FileSpreadsheet } from "lucide-react";
 import { ClickableRow } from "@/components/shared/clickable-row";
 
 const th = "h-10 px-3 text-center text-xs font-medium text-muted-foreground whitespace-nowrap border-r border-border";
@@ -29,6 +29,12 @@ export default async function CustomersPage({
   return (
     <>
       <PageHeader title="고객관리" description={`총 ${total}명`}>
+        <a href="/api/export?type=customers">
+          <Button variant="outline" size="sm">
+            <FileSpreadsheet className="h-4 w-4 mr-1" />
+            엑셀
+          </Button>
+        </a>
         <Link href="/customers/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />

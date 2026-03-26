@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -18,7 +19,11 @@ import {
   X,
   UserCog,
   ClipboardList,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { NotificationBell } from "@/components/shared/notification-bell";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
@@ -35,6 +40,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
 
   // 경로 변경 시 모바일 메뉴 닫기
   useEffect(() => {
@@ -68,6 +74,9 @@ export function Sidebar() {
           <Banknote className="h-5 w-5 text-primary" />
           <span className="text-base font-bold">대출전산</span>
         </Link>
+        <div className="ml-auto">
+          <NotificationBell />
+        </div>
       </div>
 
       {/* 모바일 오버레이 */}
@@ -92,13 +101,16 @@ export function Sidebar() {
             <Banknote className="h-6 w-6 text-primary" />
             <span className="text-lg font-bold">대출전산</span>
           </Link>
-          <button
-            onClick={() => setOpen(false)}
-            className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground md:hidden"
-            aria-label="메뉴 닫기"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <NotificationBell />
+            <button
+              onClick={() => setOpen(false)}
+              className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground md:hidden"
+              aria-label="메뉴 닫기"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
         <nav className="flex-1 space-y-1 p-4">
           {navItems.map((item) => {
@@ -149,6 +161,17 @@ export function Sidebar() {
             </Link>
           )}
         </nav>
+        <div className="border-t p-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start gap-2 text-muted-foreground"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {theme === "dark" ? "라이트 모드" : "다크 모드"}
+          </Button>
+        </div>
       </aside>
     </>
   );

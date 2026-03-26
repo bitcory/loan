@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatNumber, formatPhoneNumber } from "@/lib/formatters";
 import { OVERDUE_STAGE_LABELS } from "@/lib/constants";
 import { BatchOverdueButton } from "@/components/loans/batch-overdue-button";
+import { FileSpreadsheet } from "lucide-react";
 
 function getStageBadgeVariant(stage: string) {
   switch (stage) {
@@ -56,6 +57,12 @@ export default async function OverduePage({
         title="연체관리"
         description={`총 ${total}건의 연체 대출`}
       >
+        <a href="/api/export?type=overdue">
+          <Button variant="outline" size="sm">
+            <FileSpreadsheet className="h-4 w-4 mr-1" />
+            엑셀
+          </Button>
+        </a>
         {isAdmin && <BatchOverdueButton />}
       </PageHeader>
 

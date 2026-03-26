@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logAudit } from "@/lib/audit";
+import { createNotificationsForOrg } from "@/lib/notifications";
 
 // GET /api/batch/overdue
 // cron 서비스(Vercel Cron, GitHub Actions, etc.)에서 호출 (LOAN-08)
@@ -13,6 +14,11 @@ export async function GET(request: NextRequest) {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  const day7 = new Date(today);
+  day7.setDate(day7.getDate() + 7);
+  const day30 = new Date(today);
+  day30.setDate(day30.getDate() + 30);
 
   try {
     // 모든 org의 활성/연체 대출 처리 (basePrisma 직접 사용 — 세션 없음)
@@ -66,6 +72,16 @@ export async function GET(request: NextRequest) {
             data: { status: "OVERDUE", overdueDays, overdueStage },
           });
 
+          // 연체 알림 (fire-and-forget)
+          void createNotificationsForOrg({
+            organizationId,
+            type: "OVERDUE",
+            title: "연체 발생",
+            message: `대출 ${loan.loanNumber}이(가) 연체되었습니다. (연체 ${overdueDays}일)`,
+            entityType: "Loan",
+            entityId: loan.id,
+          });
+
           totalAffected++;
         }
       });
@@ -76,6 +92,30 @@ export async function GET(request: NextRequest) {
         null,
         { action: "SCHEDULED_BATCH_OVERDUE", affectedLoans: orgLoans.length, date: today.toISOString() },
       );
+    }
+
+    // 만기 도래 알림 (7일/30일 전)
+    const maturityLoans = await prisma.loan.findMany({
+      where: {
+        status: "ACTIVE",
+        endDate: { in: [day7, day30] },
+      },
+      select: { id: true, loanNumber: true, organizationId: true, endDate: true },
+    });
+
+    for (const loan of maturityLoans) {
+      const daysLeft = Math.round(
+        (loan.endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      const type = daysLeft <= 7 ? "MATURITY_7D" : "MATURITY_30D";
+      void createNotificationsForOrg({
+        organizationId: loan.organizationId,
+        type,
+        title: `만기 ${daysLeft}일 전`,
+        message: `대출 ${loan.loanNumber}의 만기가 ${daysLeft}일 후입니다.`,
+        entityType: "Loan",
+        entityId: loan.id,
+      });
     }
 
     return Response.json({

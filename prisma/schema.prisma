@@ -179,3 +179,22 @@ model Setting {
   @@unique([organizationId, key])
   @@map("settings")
 }
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  entityType     String   // "Customer" | "Loan" | "Collateral" | "Mortgage" | "Payment" | "Setting"
+  entityId       String
+  action         String   // "CREATE" | "UPDATE" | "DELETE"
+  before         Json?    // CREATE의 경우 null
+  after          Json?    // DELETE의 경우 null
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, entityType, entityId])
+  @@index([organizationId, userId])
+  @@map("audit_logs")
+}

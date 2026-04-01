@@ -315,7 +315,7 @@ export async function getDashboardExtended() {
 export const createLoan = authenticatedAction
   .schema(loanSchema)
   .action(async ({ parsedInput, ctx }) => {
-    const { customerId, collateralId, loanAmount, interestRate, repaymentType, loanTermMonths, startDate, memo } = parsedInput;
+    const { customerId, collateralId, loanAmount, interestRate, overdueRate, repaymentType, loanTermMonths, startDate, memo } = parsedInput;
     const start = parseISO(startDate);
     const endDate = addMonths(start, loanTermMonths);
     const loanNumber = await generateLoanNumber(ctx.db, start);
@@ -337,6 +337,7 @@ export const createLoan = authenticatedAction
         loanAmount,
         balance: loanAmount,
         interestRate,
+        overdueRate: overdueRate ?? 20,
         repaymentType,
         loanTermMonths,
         startDate: start,

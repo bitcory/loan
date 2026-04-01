@@ -55,6 +55,11 @@ export const loanSchema = z.object({
     .number()
     .positive("이율을 입력해주세요")
     .max(20, "법정 최고이율(20%)을 초과할 수 없습니다"),
+  overdueRate: z.coerce
+    .number()
+    .positive("연체이율을 입력해주세요")
+    .max(20, "법정 최고이율(20%)을 초과할 수 없습니다")
+    .optional(),
   repaymentType: z.enum(["BULLET", "EQUAL_PRINCIPAL", "EQUAL_PAYMENT"]),
   loanTermMonths: z.coerce.number().int().positive("대출기간을 입력해주세요"),
   startDate: z.string().min(1, "실행일을 입력해주세요"),

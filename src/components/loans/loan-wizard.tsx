@@ -37,6 +37,7 @@ export function LoanWizard() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Data
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -48,6 +49,7 @@ export function LoanWizard() {
   const [collateralId, setCollateralId] = useState("");
   const [loanAmount, setLoanAmount] = useState(0);
   const [interestRate, setInterestRate] = useState(15);
+  const [overdueRate, setOverdueRate] = useState(20);
   const [repaymentType, setRepaymentType] = useState("BULLET");
   const [loanTermMonths, setLoanTermMonths] = useState(12);
   const [startDate, setStartDate] = useState(
@@ -83,12 +85,14 @@ export function LoanWizard() {
 
   async function handleSubmit() {
     setSaving(true);
+    setSubmitError("");
 
     const result = await createLoan({
       customerId,
       collateralId: collateralId || undefined,
       loanAmount,
       interestRate,
+      overdueRate,
       repaymentType: repaymentType as "BULLET" | "EQUAL_PRINCIPAL" | "EQUAL_PAYMENT",
       loanTermMonths,
       startDate,
@@ -97,6 +101,10 @@ export function LoanWizard() {
 
     if (result?.data?.id) {
       router.push(`/loans/${result.data.id}`);
+    } else {
+      const err = result?.serverError
+        ?? JSON.stringify(result?.validationErrors ?? "알 수 없는 오류");
+      setSubmitError(String(err));
     }
   }
 
@@ -222,6 +230,20 @@ export function LoanWizard() {
               )}
             </div>
             <div className="grid gap-2">
+              <Label>연체이율 (%) — 미입력 시 20% 적용</Label>
+              <Input
+                type="number"
+                step="0.01"
+                min="0"
+                max="20"
+                value={overdueRate}
+                onChange={(e) => setOverdueRate(Number(e.target.value))}
+              />
+              {overdueRate > 20 && (
+                <p className="text-sm text-destructive">법정 최고이율(20%)을 초과할 수 없습니다</p>
+              )}
+            </div>
+            <div className="grid gap-2">
               <Label>상환방식 *</Label>
               <select
                 value={repaymentType}
@@ -305,6 +327,7 @@ export function LoanWizard() {
                 <h3 className="font-medium">대출 조건</h3>
                 <p className="text-sm">금액: {formatCurrency(loanAmount)}</p>
                 <p className="text-sm">이율: {interestRate}%</p>
+                <p className="text-sm">연체이율: {overdueRate}%</p>
                 <p className="text-sm">상환: {REPAYMENT_TYPE_LABELS[repaymentType]}</p>
                 <p className="text-sm">기간: {loanTermMonths}개월</p>
                 <p className="text-sm">실행일: {startDate}</p>
@@ -322,6 +345,12 @@ export function LoanWizard() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {submitError && (
+        <div className="rounded-md bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive">
+          오류: {submitError}
+        </div>
       )}
 
       {/* Navigation */}
